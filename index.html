@@ -21,7 +21,7 @@ function validateEzPayId(inputId) {
         $(this).val(val);
     });
 
-    $(inputId).on("change blur", function() {
+    $(inputId).on("change", function() {
         var val = $(this).val();
         val = _onlyNumber(val);
         if (_checkLength(val)) {
