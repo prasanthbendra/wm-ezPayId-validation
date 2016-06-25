@@ -1,11 +1,82 @@
 <html>
 
 <head>
-    <title></title>
+    <title>WM :: Validation for ezPayId</title>
 </head>
 
 <body>
-    <h1>It works!</h1>
+    <h1>This must be validated</h1>
+
+    <input type="text" id="ezPayId" />
+
 </body>
+<script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	validateEzPayId("#ezPayId");
+});
+
+function validateEzPayId(inputId){
+	$(inputId).on("keyup", function(){
+		var val = $(this).val();
+		console.log( "Text val: ", val );
+		val = onlyNumber( val );
+		
+		if( checkLength(val) ){
+			//val =  prependZeros(val);
+		} else{
+			val = truncateExtra(val);
+		}
+
+		val = FormatEzPayId(val);
+		$(this).val(val);
+
+		console.log( "Res val: ", val );
+	});
+
+	$(inputId).on("change blur", function(){
+		var val = $(this).val();
+		console.log( "Text val: ", val );
+		val = onlyNumber( val );
+		
+		if( checkLength(val) ){
+			val =  prependZeros(val);
+		} else{
+			val = truncateExtra(val);
+		}
+
+		val = FormatEzPayId(val);
+		$(this).val(val);
+
+		console.log( "Res val: ", val );
+	});
+
+	function onlyNumber(str){
+		var number = str.match(/\d/g) || [];
+		number = number.join("");
+		return number;
+	}
+
+	function checkLength(str){
+		return (str.length <= 15)?true:false;
+	}
+
+	function prependZeros(str){
+		return (!!str.length)?(new Array(15 - str.length + 1).join(0) + str):"";
+	}
+
+	function truncateExtra(str){
+		match = str.match(/[\d]{0,15}/);
+		return match[0];
+	}
+
+	function FormatEzPayId(str){
+		return str.substring(0, 5) + 
+		( (!!str.substring(5, 10))?("-" + str.substring(5, 10)):"" ) + 
+		( (!!str.substring(10, 15))?("-" + str.substring(10, 15)):"");
+	}
+}
+</script>
 
 </html>
