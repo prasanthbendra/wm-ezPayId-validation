@@ -15,6 +15,8 @@ $(document).ready(function() {
 });
 
 function validateEzPayId(inputId) {
+	var ezPayIdlength = 15;
+	
     $(inputId).on("keyup", function() {
         var val = $(this).val();
         val = _formatEzPayId(_truncateExtra(_onlyNumber(val)));
@@ -40,11 +42,11 @@ function validateEzPayId(inputId) {
     }
 
     function _checkLength(str) {
-        return (str.length <= 15) ? true : false;
+        return (str.length <= ezPayIdlength) ? true : false;
     }
 
     function _prependZeros(str) {
-        return (!!str.length) ? (new Array(15 - str.length + 1).join(0) + str) : "";
+        return (!!str.length) ? (new Array(ezPayIdlength - str.length + 1).join(0) + str) : "";
     }
 
     function _truncateExtra(str) {
