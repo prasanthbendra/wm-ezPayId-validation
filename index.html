@@ -6,69 +6,57 @@
 
 <body>
     <h1>This must be validated</h1>
-
     <input type="text" id="ezPayId" maxlength="17" />
-
 </body>
-<script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script type="text/javascript">
-
-$(document).ready(function(){
-	validateEzPayId("#ezPayId");
+$(document).ready(function() {
+    validateEzPayId("#ezPayId");
 });
 
-function validateEzPayId(inputId){
-	$(inputId).on("keyup", function(){
-		var val = $(this).val();
-		console.log( "Text val: ", val );
+function validateEzPayId(inputId) {
+    $(inputId).on("keyup", function() {
+        var val = $(this).val();
+        val = _formatEzPayId(_truncateExtra(_onlyNumber(val)));
+        $(this).val(val);
+    });
 
-		val = _formatEzPayId(_truncateExtra(_onlyNumber( val )));
-		$(this).val(val);
+    $(inputId).on("change blur", function() {
+        var val = $(this).val();
+        val = _onlyNumber(val);
+        if (_checkLength(val)) {
+            val = _prependZeros(val);
+        } else {
+            val = _truncateExtra(val);
+        }
+        val = _formatEzPayId(val);
+        $(this).val(val);
+    });
 
-		console.log( "Res val: ", val );
-	});
+    function _onlyNumber(str) {
+        var number = str.match(/\d/g) || [];
+        number = number.join("");
+        return number;
+    }
 
-	$(inputId).on("change blur", function(){
-		var val = $(this).val();
-		console.log( "Text val: ", val );
-		val = _onlyNumber( val );
-		
-		if( _checkLength(val) ){
-			val =  _prependZeros(val);
-		} else{
-			val = _truncateExtra(val);
-		}
+    function _checkLength(str) {
+        return (str.length <= 15) ? true : false;
+    }
 
-		val = _formatEzPayId(val);
-		$(this).val(val);
+    function _prependZeros(str) {
+        return (!!str.length) ? (new Array(15 - str.length + 1).join(0) + str) : "";
+    }
 
-		console.log( "Res val: ", val );
-	});
+    function _truncateExtra(str) {
+        match = str.match(/[\d]{0,15}/);
+        return match[0];
+    }
 
-	function _onlyNumber(str){
-		var number = str.match(/\d/g) || [];
-		number = number.join("");
-		return number;
-	}
-
-	function _checkLength(str){
-		return (str.length <= 15)?true:false;
-	}
-
-	function _prependZeros(str){
-		return (!!str.length)?(new Array(15 - str.length + 1).join(0) + str):"";
-	}
-
-	function _truncateExtra(str){
-		match = str.match(/[\d]{0,15}/);
-		return match[0];
-	}
-
-	function _formatEzPayId(str){
-		return str.substring(0, 5) + 
-		( (!!str.substring(5, 10))?("-" + str.substring(5, 10)):"" ) + 
-		( (!!str.substring(10, 15))?("-" + str.substring(10, 15)):"");
-	}
+    function _formatEzPayId(str) {
+        return str.substring(0, 5) +
+            ((!!str.substring(5, 10)) ? ("-" + str.substring(5, 10)) : "") +
+            ((!!str.substring(10, 15)) ? ("-" + str.substring(10, 15)) : "");
+    }
 }
 </script>
 
