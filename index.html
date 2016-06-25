@@ -16,7 +16,15 @@ $(document).ready(function() {
 
 function validateEzPayId(inputId) {
 	var ezPayIdlength = 15;
-	
+	$(inputId).on("keypress", function(e) {
+		if( e.keyCode == 45 || ( e.keyCode >= 48 &&  e.keyCode <= 57 ) ){
+			return true;
+		}
+		else{
+			return false;
+		}
+	});
+
     $(inputId).on("keyup", function() {
         var val = $(this).val();
         val = _formatEzPayId(_truncateExtra(_onlyNumber(val)));
